@@ -6,6 +6,13 @@ ThemeData themeData(ColorScheme theme) => ThemeData.from(
       dividerColor: theme.outline,
       splashColor: Colors.green.shade50,
       //
+      appBarTheme: AppBarTheme(
+        titleSpacing: 0,
+        elevation: 0.1,
+        shadowColor: theme.outline,
+        backgroundColor: theme.background,
+      ),
+      //
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,

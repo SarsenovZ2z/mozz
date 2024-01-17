@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mozz/src/features/chat/presentation/widgets/chat_image.dart';
 
 class ChatListItem extends StatelessWidget {
   const ChatListItem({super.key});
@@ -16,13 +18,20 @@ class ChatListItem extends StatelessWidget {
       ),
       child: ListTile(
         dense: true,
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(
+            'chat',
+            pathParameters: {
+              'id': '1',
+            },
+          );
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         horizontalTitleGap: 12,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-        leading: const _ChatImage(),
+        leading: const ChatImage(),
         title: const _Title(),
         subtitle: const _Subtitle(),
         trailing: const _ChatTimestamps(),
@@ -67,48 +76,6 @@ class _Subtitle extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.onTertiary),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ChatImage extends StatelessWidget {
-  static const gradientColors = [
-    [
-      Color(0xFF1FDB5F),
-      Color(0xFF31C764),
-    ],
-    [
-      Color(0xFFF66700),
-      Color(0xFFED3900),
-    ],
-    [
-      Color(0xFF00ACF6),
-      Color(0xFF006DED),
-    ],
-  ];
-
-  const _ChatImage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      width: 50,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: gradientColors[0],
-        ),
-      ),
-      child: Text(
-        'BB',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: Theme.of(context).colorScheme.background,
-        ),
       ),
     );
   }
