@@ -5,18 +5,28 @@ class ChatListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      dense: true,
-      onTap: () {},
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: Theme.of(context).dividerColor,
+          ),
+        ),
       ),
-      horizontalTitleGap: 12,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-      leading: const _ChatImage(),
-      title: const _Title(),
-      subtitle: const _Subtitle(),
-      trailing: const _ChatTimestamps(),
+      child: ListTile(
+        dense: true,
+        onTap: () {},
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        horizontalTitleGap: 12,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        leading: const _ChatImage(),
+        title: const _Title(),
+        subtitle: const _Subtitle(),
+        trailing: const _ChatTimestamps(),
+      ),
     );
   }
 }

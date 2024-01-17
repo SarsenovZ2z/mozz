@@ -26,12 +26,4 @@ ThemeData themeData(ColorScheme theme) => ThemeData.from(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      //
-      appBarTheme: AppBarTheme(
-        titleTextStyle: TextStyle(
-          color: theme.onBackground,
-          fontWeight: FontWeight.w600,
-          fontSize: 32,
-        ),
-      ),
     );
