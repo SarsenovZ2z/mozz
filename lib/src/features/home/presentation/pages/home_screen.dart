@@ -38,12 +38,3 @@ class _Content extends StatelessWidget {
     );
   }
 }
-
-class _Search extends StatelessWidget {
-  const _Search({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text('Search');
-  }
-}

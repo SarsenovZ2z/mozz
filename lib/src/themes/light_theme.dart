@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 
-ThemeData lightTheme() => ThemeData.from(
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.green,
-        accentColor: Colors.green,
-        backgroundColor: Colors.white,
-      ),
-    ).copyWith(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.green.shade50,
 
-      appBarTheme: const AppBarTheme(
-        titleTextStyle: TextStyle(
-          color: Color(0xFF2B333E),
-          fontWeight: FontWeight.w600,
-          fontSize: 32,
-        ),
-      ),
-    );
+ColorScheme lightTheme() => ColorScheme.fromSwatch(
+  primarySwatch: Colors.green,
+).copyWith(
+  tertiary: const Color(0xFFEDF2F6),
+  onTertiary: const Color(0xFF5E7A90),
+  background: Colors.white,
+  onBackground: const Color(0xFF2B333E),
+  outline: const Color(0xFFEDF2F6),
+);

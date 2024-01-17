@@ -42,19 +42,19 @@ class _Subtitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
-      text: const TextSpan(
-        style: TextStyle(
+      text: TextSpan(
+        style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
         children: [
           TextSpan(
             text: 'Вы: ',
-            style: TextStyle(color: Color(0xFF2B333E)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
           ),
           TextSpan(
             text: 'Уже сделал?',
-            style: TextStyle(color: Color(0xFF5E7A90)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onTertiary),
           ),
         ],
       ),
@@ -92,12 +92,12 @@ class _ChatImage extends StatelessWidget {
           colors: gradientColors[0],
         ),
       ),
-      child: const Text(
+      child: Text(
         'BB',
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w700,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
         ),
       ),
     );
@@ -109,12 +109,12 @@ class _ChatTimestamps extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Text(
           'Вчера',
           style: TextStyle(
-            color: Color(0xFF5E7A90),
+            color: Theme.of(context).hintColor,
           ),
         ),
       ],
