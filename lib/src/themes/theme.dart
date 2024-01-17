@@ -7,10 +7,14 @@ ThemeData themeData(ColorScheme theme) => ThemeData.from(
       splashColor: Colors.green.shade50,
       //
       appBarTheme: AppBarTheme(
-        titleSpacing: 0,
+        titleSpacing: 6,
         elevation: 0.1,
-        shadowColor: theme.outline,
+        surfaceTintColor: theme.background,
         backgroundColor: theme.background,
+        shape: Border(
+          bottom: BorderSide(color: theme.outline),
+
+        ),
       ),
       //
       inputDecorationTheme: InputDecorationTheme(
