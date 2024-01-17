@@ -13,7 +13,7 @@ class Application extends StatelessWidget {
         routerConfig: router,
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        theme: lightTheme,
+        theme: lightTheme(),
       ),
     );
   }
