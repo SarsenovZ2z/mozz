@@ -33,4 +33,15 @@ class ChatRepositoryImpl implements ChatRepository {
     return Left(UnexpectedFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, ChatEntity>> fetchChat(int chatId) async {
+    try {
+      return Right(await chatDataSource.fetchChat(chatId));
+    } on Failure catch(e) {
+      return Left(e);
+    } catch (e) {
+      return Left(UnexpectedFailure(e));
+    }
+  }
 }

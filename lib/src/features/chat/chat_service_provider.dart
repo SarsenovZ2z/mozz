@@ -6,8 +6,11 @@ import 'package:mozz/src/features/chat/data/datasources/chat_datasource.dart';
 import 'package:mozz/src/features/chat/data/datasources/chat_memory_datasource.dart';
 import 'package:mozz/src/features/chat/data/repositories/chat_repository.dart';
 import 'package:mozz/src/features/chat/domain/repositories/chat_repository.dart';
+import 'package:mozz/src/features/chat/domain/usecases/fetch_chat.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_chats.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_messages.dart';
+import 'package:mozz/src/features/chat/presentation/controllers/chat_cubit.dart';
+import 'package:mozz/src/features/chat/presentation/controllers/chat_messages_cubit.dart';
 import 'package:mozz/src/features/chat/presentation/controllers/chats_cubit.dart';
 import 'package:mozz/src/features/chat/presentation/pages/chat_screen.dart';
 
@@ -24,7 +27,7 @@ class ChatServiceProvider extends ServiceProvider {
           key: state.pageKey,
           child: ChatScreen(
             key: state.pageKey,
-            chatId: state.pathParameters['id']!,
+            chatId: int.parse(state.pathParameters['id']!),
           ),
         ),
       ),
@@ -36,6 +39,18 @@ class ChatServiceProvider extends ServiceProvider {
     GetIt.instance.registerFactory<ChatsCubit>(
       () => ChatsCubit(
         fetchChats: GetIt.instance(),
+      ),
+    );
+
+    GetIt.instance.registerFactory<ChatCubit>(
+      () => ChatCubit(
+        fetchChat: GetIt.instance(),
+      ),
+    );
+
+    GetIt.instance.registerFactory<ChatMessagesCubit>(
+      () => ChatMessagesCubit(
+        fetchMessages: GetIt.instance(),
       ),
     );
   }
@@ -60,6 +75,12 @@ class ChatServiceProvider extends ServiceProvider {
   void registerUseCases() {
     GetIt.instance.registerFactory<FetchChats>(
       () => FetchChats(
+        chatRepository: GetIt.instance(),
+      ),
+    );
+
+    GetIt.instance.registerFactory<FetchChat>(
+      () => FetchChat(
         chatRepository: GetIt.instance(),
       ),
     );

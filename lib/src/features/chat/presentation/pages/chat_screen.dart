@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mozz/src/common/presentation/controllers/data_states.dart';
 import 'package:mozz/src/common/presentation/widgets/ui/back_arrow.dart';
+import 'package:mozz/src/features/chat/domain/entities/chat_entity.dart';
 import 'package:mozz/src/features/chat/domain/entities/message_entity.dart';
+import 'package:mozz/src/features/chat/presentation/controllers/chat_cubit.dart';
+import 'package:mozz/src/features/chat/presentation/controllers/chat_messages_cubit.dart';
 import 'package:mozz/src/features/chat/presentation/widgets/chat_image.dart';
 import 'package:mozz/src/utils/extensions/iterable/group_by.dart';
 
 class ChatScreen extends StatelessWidget {
-  final String chatId;
+  final int chatId;
 
   const ChatScreen({
     super.key,
@@ -16,34 +22,66 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 36,
-        leading: const BackArrow(),
-        title: const _Title(),
-        toolbarHeight: 74,
-      ),
-      body: const _Content(),
-      bottomSheet: const _Bottom(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatCubit>(
+          create: (_) => GetIt.instance()..load(LoadChatParams(chatId)),
+        ),
+        BlocProvider<ChatMessagesCubit>(
+          create: (_) => GetIt.instance()..load(LoadChatMessages(chatId)),
+        ),
+      ],
+      child: BlocBuilder<ChatCubit, DataState<Chat>>(builder: (context, state) {
+        if (state is LoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (state is! LoadedState<Chat>) {
+          // TODO: show error
+          return const SizedBox();
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            leadingWidth: 36,
+            leading: const BackArrow(),
+            title: _Title(
+              chat: state.result.chat,
+            ),
+            toolbarHeight: 74,
+          ),
+          body: const _Content(),
+          bottomSheet: const _Bottom(),
+        );
+      }),
     );
   }
 }
 
 class _Title extends StatelessWidget {
-  const _Title({super.key});
+  final ChatEntity chat;
+
+  const _Title({
+    super.key,
+    required this.chat,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const ChatImage(),
+        ChatImage(
+          chatId: chat.id,
+        ),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Victor Vlasov',
-              style: TextStyle(
+            Text(
+              chat.name,
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),
@@ -68,51 +106,41 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<MessageEntity> messages = [
-      MessageEntity(
-        id: 3,
-        message: 'Уже сделал?',
-        isSentByUser: true,
-        createdAt: DateTime.parse('2022-01-23 21:43:00'),
-        readAt: null,
-      ),
-      MessageEntity(
-        id: 2,
-        message: 'Okay',
-        isSentByUser: false,
-        createdAt: DateTime.parse('2022-01-22 21:42:00'),
-        readAt: null,
-      ),
-      MessageEntity(
-        id: 1,
-        message: 'Сделай мне кофе, пожалуйста',
-        isSentByUser: true,
-        createdAt: DateTime.parse('2022-01-22 21:41:00'),
-        readAt: null,
-      ),
-    ];
+    return BlocBuilder<ChatMessagesCubit, DataState<ChatMessages>>(
+        builder: (context, state) {
+      if (state is LoadingState) {
+        // TODO: use Shimmer
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
 
-    final grouped = messages.groupBy<String>(
-      (message) => DateFormat('dd.MM.yy').format(message.createdAt),
-    );
+      if (state is! LoadedState<ChatMessages>) {
+        return const SizedBox();
+      }
 
-    return ListView(
-      reverse: true,
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      children: [
-        const SizedBox(height: 140),
-        for (final group in grouped.entries) ...[
-          ...group.value.map(
-            (message) => _MessageContainer(
-              message: message,
+      final grouped = state.result.messages.groupBy<String>(
+        (message) => DateFormat('dd.MM.yy').format(message.createdAt),
+      );
+
+      return ListView(
+        reverse: true,
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        children: [
+          const SizedBox(height: 140),
+          for (final group in grouped.entries) ...[
+            ...group.value.map(
+              (message) => _MessageContainer(
+                message: message,
+              ),
             ),
-          ),
-          _MessageGroup(
-            groupName: group.key,
-          ),
+            _MessageGroup(
+              groupName: group.key,
+            ),
+          ],
         ],
-      ],
-    );
+      );
+    });
   }
 }
 
@@ -368,7 +396,6 @@ class _ChatButton extends StatelessWidget {
 }
 
 class _TextInput extends StatefulWidget {
-
   const _TextInput({super.key});
 
   @override

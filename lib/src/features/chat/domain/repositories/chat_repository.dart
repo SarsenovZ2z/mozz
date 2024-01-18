@@ -6,6 +6,8 @@ import 'package:mozz/src/features/chat/domain/entities/message_entity.dart';
 abstract class ChatRepository {
   Future<Either<Failure, List<ChatEntity>>> fetchChats();
 
+  Future<Either<Failure, ChatEntity>> fetchChat(int chatId);
+
   // TODO: add pagination
   Future<Either<Failure, List<MessageEntity>>> fetchMessages(int chatId);
 }
