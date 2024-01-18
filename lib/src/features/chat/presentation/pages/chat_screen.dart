@@ -110,7 +110,6 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatMessagesCubit, DataState<ChatMessages>>(
         builder: (context, state) {
-      print(state);
       if (state is LoadingState && state is! LazyLoadingState) {
         // TODO: use Shimmer
         return const Center(

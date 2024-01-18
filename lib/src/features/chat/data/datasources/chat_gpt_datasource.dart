@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mozz/src/common/data/datasources/remote_datasource.dart';
 import 'package:mozz/src/features/chat/data/datasources/chat_datasource.dart';
 import 'package:mozz/src/features/chat/domain/entities/chat_entity.dart';
@@ -72,7 +73,7 @@ class ChatGptDataSource extends RemoteDataSource implements ChatDataSource {
     ];
 
     final response = await api
-        .usingAccessToken('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')
+        .usingAccessToken(dotenv.get('CHAT_GPT_KEY'))
         .request(
       HTTPMethod.post,
       'https://api.openai.com/v1/chat/completions',
@@ -82,8 +83,6 @@ class ChatGptDataSource extends RemoteDataSource implements ChatDataSource {
         "messages": messages
       },
     );
-
-    print(messages);
 
     return response.data['choices'][0]['message']['content'];
   }
