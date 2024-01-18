@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:mozz/src/features/chat/domain/entities/chat_entity.dart';
+import 'package:mozz/src/features/chat/domain/entities/message_entity.dart';
 import 'package:mozz/src/features/chat/presentation/widgets/chat_image.dart';
 
 class ChatListItem extends StatelessWidget {
-  const ChatListItem({super.key});
+  final ChatEntity chat;
+
+  const ChatListItem({
+    super.key,
+    required this.chat,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +30,7 @@ class ChatListItem extends StatelessWidget {
           context.pushNamed(
             'chat',
             pathParameters: {
-              'id': '1',
+              'id': chat.id.toString(),
             },
           );
         },
@@ -31,23 +39,38 @@ class ChatListItem extends StatelessWidget {
         ),
         horizontalTitleGap: 12,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-        leading: const ChatImage(),
-        title: const _Title(),
-        subtitle: const _Subtitle(),
-        trailing: const _ChatTimestamps(),
+        leading: ChatImage(
+          chatId: chat.id,
+        ),
+        title: _Title(
+          chatName: chat.name,
+        ),
+        subtitle: chat.lastMessage != null
+            ? _Subtitle(
+                message: chat.lastMessage!,
+              )
+            : null,
+        trailing: chat.lastMessage != null ? _ChatTimestamps(
+          date: chat.lastMessage!.createdAt,
+        ) : null,
       ),
     );
   }
 }
 
 class _Title extends StatelessWidget {
-  const _Title({super.key});
+  final String chatName;
+
+  const _Title({
+    super.key,
+    required this.chatName,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Victor Vlasov',
-      style: TextStyle(
+    return Text(
+      chatName,
+      style: const TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w600,
       ),
@@ -56,7 +79,12 @@ class _Title extends StatelessWidget {
 }
 
 class _Subtitle extends StatelessWidget {
-  const _Subtitle({super.key});
+  final MessageEntity message;
+
+  const _Subtitle({
+    super.key,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +95,14 @@ class _Subtitle extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
         children: [
+          if (message.isSentByUser)
+            TextSpan(
+              text: 'Вы: ',
+              style:
+                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+            ),
           TextSpan(
-            text: 'Вы: ',
-            style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-          ),
-          TextSpan(
-            text: 'Уже сделал?',
+            text: message.message,
             style: TextStyle(color: Theme.of(context).colorScheme.onTertiary),
           ),
         ],
@@ -82,14 +112,19 @@ class _Subtitle extends StatelessWidget {
 }
 
 class _ChatTimestamps extends StatelessWidget {
-  const _ChatTimestamps({super.key});
+  final DateTime date;
+
+  const _ChatTimestamps({
+    super.key,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          'Вчера',
+          DateFormat('dd MMM HH:mm').format(date),
           style: TextStyle(
             color: Theme.of(context).hintColor,
           ),

@@ -13,14 +13,24 @@ class ChatRepositoryImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Failure, List<ChatEntity>>> fetchChats() {
-    // TODO: implement fetchChats
-    throw UnimplementedError();
+  Future<Either<Failure, List<ChatEntity>>> fetchChats() async {
+    try {
+      return Right(await chatDataSource.fetchChats());
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(UnexpectedFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, List<MessageEntity>>> fetchMessages(int chatId) {
-    // TODO: implement fetchMessages
-    throw UnimplementedError();
+  Future<Either<Failure, List<MessageEntity>>> fetchMessages(int chatId) async {
+    try {
+      return Right(await chatDataSource.fetchMessages(chatId));
+    } on Failure catch(e) {
+    return Left(e);
+    } catch (e) {
+    return Left(UnexpectedFailure(e));
+    }
   }
 }

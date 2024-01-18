@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 class ChatImage extends StatelessWidget {
+  final int chatId;
+
   static const gradientColors = [
     [
       Color(0xFF1FDB5F),
@@ -17,7 +19,7 @@ class ChatImage extends StatelessWidget {
     ],
   ];
 
-  const ChatImage({super.key});
+  const ChatImage({super.key, this.chatId = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class ChatImage extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
-          colors: gradientColors[0],
+          colors: gradientColors[chatId % gradientColors.length],
         ),
       ),
       child: Text(

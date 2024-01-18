@@ -6,8 +6,8 @@ import 'package:mozz/src/common/presentation/controllers/data_states.dart';
 import 'package:mozz/src/features/chat/domain/entities/chat_entity.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_chats.dart';
 
-class LoadChats extends Equatable {
-  const LoadChats();
+class LoadChatsParams extends Equatable {
+  const LoadChatsParams();
 
   @override
   List<Object?> get props => [];
@@ -26,7 +26,7 @@ class Chats extends Equatable {
       ];
 }
 
-class ChatsCubit extends DataCubit<Chats, LoadChats> {
+class ChatsCubit extends DataCubit<Chats, LoadChatsParams> {
   final FetchChats fetchChats;
 
   ChatsCubit({
@@ -40,7 +40,7 @@ class ChatsCubit extends DataCubit<Chats, LoadChats> {
 
   @override
   Future<Either<Failure, dynamic>> fetch(
-    LoadChats params,
+    LoadChatsParams params,
     LoadedState<Chats>? oldState,
   ) {
     return fetchChats();
@@ -48,7 +48,7 @@ class ChatsCubit extends DataCubit<Chats, LoadChats> {
 
   @override
   Future<DataState<Chats>> getLoadedState(
-    LoadChats params,
+    LoadChatsParams params,
     LoadedState<Chats>? oldState,
     data,
   ) async {

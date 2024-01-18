@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mozz/src/features/chat/presentation/widgets/chat_list_item.dart';
+import 'package:mozz/src/features/chat/presentation/widgets/chats_sliver_list.dart';
 import 'package:mozz/src/features/chat/presentation/widgets/search_chats.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -29,12 +29,9 @@ class _Content extends StatelessWidget {
         const SliverToBoxAdapter(
           child: SearchChats(),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.all(8),
-          sliver: SliverList.builder(
-            itemCount: 100,
-            itemBuilder: (context, index) => const ChatListItem(),
-          ),
+        const SliverPadding(
+          padding: EdgeInsets.all(8),
+          sliver: ChatsSliverList(),
         ),
       ],
     );
