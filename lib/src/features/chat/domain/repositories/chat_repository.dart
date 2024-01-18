@@ -10,4 +10,10 @@ abstract class ChatRepository {
 
   // TODO: add pagination
   Future<Either<Failure, List<MessageEntity>>> fetchMessages(int chatId);
+
+  Future<Either<Failure, String>> sendMessage({
+    required int chatId,
+    required String message,
+    List<MessageEntity> context = const [],
+  });
 }

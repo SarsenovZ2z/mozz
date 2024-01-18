@@ -27,10 +27,10 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, List<MessageEntity>>> fetchMessages(int chatId) async {
     try {
       return Right(await chatDataSource.fetchMessages(chatId));
-    } on Failure catch(e) {
-    return Left(e);
+    } on Failure catch (e) {
+      return Left(e);
     } catch (e) {
-    return Left(UnexpectedFailure(e));
+      return Left(UnexpectedFailure(e));
     }
   }
 
@@ -38,7 +38,26 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, ChatEntity>> fetchChat(int chatId) async {
     try {
       return Right(await chatDataSource.fetchChat(chatId));
-    } on Failure catch(e) {
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(UnexpectedFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> sendMessage({
+    required int chatId,
+    required String message,
+    List<MessageEntity> context = const [],
+  }) async {
+    try {
+      return Right(await chatDataSource.sendMessage(
+        chatId: chatId,
+        message: message,
+        context: context,
+      ));
+    } on Failure catch (e) {
       return Left(e);
     } catch (e) {
       return Left(UnexpectedFailure(e));

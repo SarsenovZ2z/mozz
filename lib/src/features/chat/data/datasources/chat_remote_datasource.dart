@@ -25,4 +25,14 @@ class ChatRemoteDataSource extends RemoteDataSource implements ChatDataSource {
     // TODO: implement fetchChat
     throw UnimplementedError();
   }
+
+  @override
+  Future<String> sendMessage({
+    required int chatId,
+    required String message,
+    List<MessageEntity> context = const [],
+  }) {
+    // TODO: implement sendMessage
+    throw UnimplementedError();
+  }
 }

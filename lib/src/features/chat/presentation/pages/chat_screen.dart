@@ -53,7 +53,9 @@ class ChatScreen extends StatelessWidget {
             toolbarHeight: 74,
           ),
           body: const _Content(),
-          bottomSheet: const _Bottom(),
+          bottomSheet: _Bottom(
+            chat: state.result.chat,
+          ),
         );
       }),
     );
@@ -108,7 +110,8 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatMessagesCubit, DataState<ChatMessages>>(
         builder: (context, state) {
-      if (state is LoadingState) {
+      print(state);
+      if (state is LoadingState && state is! LazyLoadingState) {
         // TODO: use Shimmer
         return const Center(
           child: CircularProgressIndicator(),
@@ -128,10 +131,23 @@ class _Content extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6),
         children: [
           const SizedBox(height: 140),
+          if (state is LazyLoadingState)
+            const _MessageContainer(
+              isSentByUser: false,
+              child: Text('...'),
+            ),
           for (final group in grouped.entries) ...[
             ...group.value.map(
               (message) => _MessageContainer(
-                message: message,
+                isSentByUser: message.isSentByUser,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(child: _Message(message: message)),
+                    _MessageInfo(message: message),
+                  ],
+                ),
               ),
             ),
             _MessageGroup(
@@ -187,25 +203,30 @@ class _MessageGroup extends StatelessWidget {
 }
 
 class _MessageContainer extends StatelessWidget {
-  final MessageEntity message;
+  final bool isSentByUser;
+  final Widget child;
 
   const _MessageContainer({
     super.key,
-    required this.message,
+    required this.isSentByUser,
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(
+        top: 20,
+        left: isSentByUser ? 50 : 0,
+        right: isSentByUser ? 0 : 50,
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: message.isSentByUser
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isSentByUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (!message.isSentByUser)
+          if (!isSentByUser)
             SvgPicture.asset(
               'assets/icons/message-left-border.svg',
               width: 10,
@@ -215,30 +236,27 @@ class _MessageContainer extends StatelessWidget {
                 BlendMode.srcIn,
               ),
             ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 12,
-            ),
-            decoration: BoxDecoration(
-              color: message.isSentByUser
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.tertiary,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(16),
-                topRight: const Radius.circular(16),
-                bottomLeft: Radius.circular(message.isSentByUser ? 16 : 0),
-                bottomRight: Radius.circular(message.isSentByUser ? 0 : 16),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 12,
               ),
-            ),
-            child: Row(
-              children: [
-                _Message(message: message),
-                _MessageInfo(message: message),
-              ],
+              decoration: BoxDecoration(
+                color: isSentByUser
+                    ? Theme.of(context).colorScheme.primaryContainer
+                    : Theme.of(context).colorScheme.tertiary,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(16),
+                  topRight: const Radius.circular(16),
+                  bottomLeft: Radius.circular(isSentByUser ? 16 : 0),
+                  bottomRight: Radius.circular(isSentByUser ? 0 : 16),
+                ),
+              ),
+              child: child,
             ),
           ),
-          if (message.isSentByUser)
+          if (isSentByUser)
             SvgPicture.asset(
               'assets/icons/message-right-border.svg',
               width: 10,
@@ -311,7 +329,12 @@ class _MessageInfo extends StatelessWidget {
 }
 
 class _Bottom extends StatelessWidget {
-  const _Bottom({super.key});
+  final ChatEntity chat;
+
+  const _Bottom({
+    super.key,
+    required this.chat,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -328,14 +351,16 @@ class _Bottom extends StatelessWidget {
           top: BorderSide(color: Theme.of(context).colorScheme.outline),
         ),
       ),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _Attach(),
-          SizedBox(width: 8),
-          _TextInput(),
-          SizedBox(width: 8),
-          _Microphone(),
+          const _Attach(),
+          const SizedBox(width: 8),
+          _TextInput(
+            chat: chat,
+          ),
+          const SizedBox(width: 8),
+          const _Microphone(),
         ],
       ),
     );
@@ -396,7 +421,12 @@ class _ChatButton extends StatelessWidget {
 }
 
 class _TextInput extends StatefulWidget {
-  const _TextInput({super.key});
+  final ChatEntity chat;
+
+  const _TextInput({
+    super.key,
+    required this.chat,
+  });
 
   @override
   State<_TextInput> createState() => _TextInputState();
@@ -423,7 +453,7 @@ class _TextInputState extends State<_TextInput> {
       child: TextFormField(
         controller: _controller,
         onFieldSubmitted: (String text) {
-          print("sending message: $text");
+          context.read<ChatMessagesCubit>().tryToSendMessage(widget.chat, text);
           _controller.clear();
         },
         decoration: const InputDecoration(

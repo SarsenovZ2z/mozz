@@ -3,12 +3,13 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mozz/src/common/service_provider.dart';
 import 'package:mozz/src/features/chat/data/datasources/chat_datasource.dart';
-import 'package:mozz/src/features/chat/data/datasources/chat_memory_datasource.dart';
+import 'package:mozz/src/features/chat/data/datasources/chat_gpt_datasource.dart';
 import 'package:mozz/src/features/chat/data/repositories/chat_repository.dart';
 import 'package:mozz/src/features/chat/domain/repositories/chat_repository.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_chat.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_chats.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_messages.dart';
+import 'package:mozz/src/features/chat/domain/usecases/send_message.dart';
 import 'package:mozz/src/features/chat/presentation/controllers/chat_cubit.dart';
 import 'package:mozz/src/features/chat/presentation/controllers/chat_messages_cubit.dart';
 import 'package:mozz/src/features/chat/presentation/controllers/chats_cubit.dart';
@@ -51,6 +52,7 @@ class ChatServiceProvider extends ServiceProvider {
     GetIt.instance.registerFactory<ChatMessagesCubit>(
       () => ChatMessagesCubit(
         fetchMessages: GetIt.instance(),
+        sendMessage: GetIt.instance(),
       ),
     );
   }
@@ -58,7 +60,9 @@ class ChatServiceProvider extends ServiceProvider {
   @override
   void registerDataSources() {
     GetIt.instance.registerFactory<ChatDataSource>(
-      () => ChatMemoryDataSource(),
+      () => ChatGptDataSource(
+        api: GetIt.instance(),
+      ),
     );
   }
 
@@ -87,6 +91,12 @@ class ChatServiceProvider extends ServiceProvider {
 
     GetIt.instance.registerFactory<FetchMessages>(
       () => FetchMessages(
+        chatRepository: GetIt.instance(),
+      ),
+    );
+
+    GetIt.instance.registerFactory<SendMessage>(
+      () => SendMessage(
         chatRepository: GetIt.instance(),
       ),
     );

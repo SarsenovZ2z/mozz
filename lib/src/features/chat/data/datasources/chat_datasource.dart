@@ -7,4 +7,10 @@ abstract class ChatDataSource {
   Future<ChatEntity> fetchChat(int chatId);
 
   Future<List<MessageEntity>> fetchMessages(int chatId);
+
+  Future<String> sendMessage({
+    required int chatId,
+    required String message,
+    List<MessageEntity> context = const [],
+  });
 }
