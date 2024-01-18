@@ -100,7 +100,7 @@ class _Content extends StatelessWidget {
       reverse: true,
       padding: const EdgeInsets.symmetric(horizontal: 6),
       children: [
-        const SizedBox(height: 100),
+        const SizedBox(height: 140),
         for (final group in grouped.entries) ...[
           ...group.value.map(
             (message) => _MessageContainer(
@@ -287,8 +287,122 @@ class _Bottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
-      child: Text('bottom'),
+    return Container(
+      padding: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 14,
+        bottom: 44,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        border: Border(
+          top: BorderSide(color: Theme.of(context).colorScheme.outline),
+        ),
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _Attach(),
+          SizedBox(width: 8),
+          _TextInput(),
+          SizedBox(width: 8),
+          _Microphone(),
+        ],
+      ),
+    );
+  }
+}
+
+class _Attach extends StatelessWidget {
+  const _Attach({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _ChatButton(
+      onPressed: () {},
+      icon: 'assets/icons/attach.svg',
+    );
+    ;
+  }
+}
+
+class _Microphone extends StatelessWidget {
+  const _Microphone({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _ChatButton(
+      onPressed: () {},
+      icon: 'assets/icons/micro.svg',
+    );
+  }
+}
+
+class _ChatButton extends StatelessWidget {
+  final void Function() onPressed;
+  final String icon;
+
+  const _ChatButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      icon: SvgPicture.asset(icon),
+    );
+  }
+}
+
+class _TextInput extends StatefulWidget {
+
+  const _TextInput({super.key});
+
+  @override
+  State<_TextInput> createState() => _TextInputState();
+}
+
+class _TextInputState extends State<_TextInput> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: TextFormField(
+        controller: _controller,
+        onFieldSubmitted: (String text) {
+          print("sending message: $text");
+          _controller.clear();
+        },
+        decoration: const InputDecoration(
+          hintText: 'Сообщение',
+        ),
+      ),
     );
   }
 }
