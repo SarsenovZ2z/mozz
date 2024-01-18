@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mozz/src/common/service_provider.dart';
+import 'package:mozz/src/features/chat/data/datasources/chat_datasource.dart';
+import 'package:mozz/src/features/chat/data/datasources/chat_memory_datasource.dart';
+import 'package:mozz/src/features/chat/data/repositories/chat_repository.dart';
+import 'package:mozz/src/features/chat/domain/repositories/chat_repository.dart';
+import 'package:mozz/src/features/chat/domain/usecases/fetch_chats.dart';
+import 'package:mozz/src/features/chat/domain/usecases/fetch_messages.dart';
 import 'package:mozz/src/features/chat/presentation/pages/chat_screen.dart';
 
 class ChatServiceProvider extends ServiceProvider {
@@ -30,16 +37,32 @@ class ChatServiceProvider extends ServiceProvider {
 
   @override
   void registerDataSources() {
-    // TODO: implement registerDataSources
+    GetIt.instance.registerFactory<ChatDataSource>(
+      () => ChatMemoryDataSource(),
+    );
   }
 
   @override
   void registerRepositories() {
-    // TODO: implement registerRepositories
+    GetIt.instance.registerSingleton<ChatRepository>(
+      ChatRepositoryImpl(
+        chatDataSource: GetIt.instance(),
+      ),
+    );
   }
 
   @override
   void registerUseCases() {
-    // TODO: implement registerUseCases
+    GetIt.instance.registerFactory<FetchChats>(
+      () => FetchChats(
+        chatRepository: GetIt.instance(),
+      ),
+    );
+
+    GetIt.instance.registerFactory<FetchMessages>(
+      () => FetchMessages(
+        chatRepository: GetIt.instance(),
+      ),
+    );
   }
 }
