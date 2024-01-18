@@ -130,7 +130,7 @@ class _Content extends StatelessWidget {
         reverse: true,
         padding: const EdgeInsets.symmetric(horizontal: 6),
         children: [
-          const SizedBox(height: 140),
+          const SizedBox(height: 130),
           if (state is LazyLoadingState)
             const _MessageContainer(
               isSentByUser: false,
@@ -343,7 +343,7 @@ class _Bottom extends StatelessWidget {
         left: 20,
         right: 20,
         top: 14,
-        bottom: 44,
+        bottom: 24,
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.background,

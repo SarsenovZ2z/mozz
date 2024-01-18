@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-ThemeData themeData(ColorScheme theme) => ThemeData.from(
+ThemeData themeData(ColorScheme theme) => ThemeData(
+      brightness: Brightness.light,
       colorScheme: theme,
-    ).copyWith(
+      fontFamily: 'Gilroy',
       dividerColor: theme.outline,
       splashColor: Colors.green.shade50,
       //
@@ -13,7 +14,6 @@ ThemeData themeData(ColorScheme theme) => ThemeData.from(
         backgroundColor: theme.background,
         shape: Border(
           bottom: BorderSide(color: theme.outline),
-
         ),
       ),
       //
