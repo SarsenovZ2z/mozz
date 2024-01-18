@@ -1,4 +1,6 @@
-class MessageEntity {
+import 'package:equatable/equatable.dart';
+
+class MessageEntity extends Equatable {
   final int id;
   final String message;
   final bool isSentByUser;
@@ -12,4 +14,13 @@ class MessageEntity {
     required this.createdAt,
     required this.readAt,
   });
+
+  @override
+  List<Object?> get props => [
+        id,
+        message,
+        isSentByUser,
+        createdAt,
+        readAt,
+      ];
 }

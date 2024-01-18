@@ -8,6 +8,7 @@ import 'package:mozz/src/features/chat/data/repositories/chat_repository.dart';
 import 'package:mozz/src/features/chat/domain/repositories/chat_repository.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_chats.dart';
 import 'package:mozz/src/features/chat/domain/usecases/fetch_messages.dart';
+import 'package:mozz/src/features/chat/presentation/controllers/chats_cubit.dart';
 import 'package:mozz/src/features/chat/presentation/pages/chat_screen.dart';
 
 class ChatServiceProvider extends ServiceProvider {
@@ -32,7 +33,11 @@ class ChatServiceProvider extends ServiceProvider {
 
   @override
   void registerBlocs() {
-    // TODO: implement registerBlocs
+    GetIt.instance.registerFactory<ChatsCubit>(
+      () => ChatsCubit(
+        fetchChats: GetIt.instance(),
+      ),
+    );
   }
 
   @override
@@ -44,8 +49,8 @@ class ChatServiceProvider extends ServiceProvider {
 
   @override
   void registerRepositories() {
-    GetIt.instance.registerSingleton<ChatRepository>(
-      ChatRepositoryImpl(
+    GetIt.instance.registerLazySingleton<ChatRepository>(
+      () => ChatRepositoryImpl(
         chatDataSource: GetIt.instance(),
       ),
     );

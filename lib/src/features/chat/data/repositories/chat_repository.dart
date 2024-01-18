@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:mozz/src/common/domain/entities/failure.dart';
 import 'package:mozz/src/features/chat/data/datasources/chat_datasource.dart';
 import 'package:mozz/src/features/chat/domain/entities/chat_entity.dart';
 import 'package:mozz/src/features/chat/domain/entities/message_entity.dart';
@@ -12,13 +13,13 @@ class ChatRepositoryImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Exception, List<ChatEntity>>> fetchChats() {
+  Future<Either<Failure, List<ChatEntity>>> fetchChats() {
     // TODO: implement fetchChats
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Exception, List<MessageEntity>>> fetchMessages(int chatId) {
+  Future<Either<Failure, List<MessageEntity>>> fetchMessages(int chatId) {
     // TODO: implement fetchMessages
     throw UnimplementedError();
   }
