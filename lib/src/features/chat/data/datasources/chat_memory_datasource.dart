@@ -19,7 +19,7 @@ class ChatMemoryDataSource implements ChatDataSource {
       ),
       ChatEntity(
         id: 2,
-        name: 'Морфиус',
+        name: 'Морфеус',
         lastMessage: MessageEntity(
           id: 1,
           message: 'Ты веришь в судьбу, Нео?',
